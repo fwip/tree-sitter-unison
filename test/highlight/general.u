@@ -1,0 +1,14 @@
+use Nat + sort
+--^ include
+--   ^ namespace
+
+add1 : Nat -> Nat
+--      ^type
+add1 x =
+--^ function
+--   ^parameter
+  x + 2
+--^variable
+--  ^operator
+--    ^number
+

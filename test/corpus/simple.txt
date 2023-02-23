@@ -1,0 +1,54 @@
+========
+addFunc
+========
+
+add1 : Nat -> Nat
+add1 x = x + 1
+
+-----------------------------
+
+(source_file
+  (term_declaration
+    (type_signature
+      (identifier)
+      (type
+        (identifier)
+        (identifier)))
+      (term_definition
+        (identifier)
+        (identifier)
+        (block_expression
+          (operator_expression
+            (identifier)
+            (operator)
+            (literal_number))))))
+
+
+=========
+blockFunc
+=========
+
+blockF x =
+  y = x + 2
+  y * x
+
+-----------------------
+
+(source_file
+  (term_declaration
+    (term_definition
+      (identifier)
+      (identifier)
+      (block_expression
+        (statement
+          (identifier)
+          (operator_expression
+            (identifier)
+            (operator)
+            (literal_number)))
+        (operator_expression
+          (identifier)
+          (operator)
+          (identifier))))))
+          
+

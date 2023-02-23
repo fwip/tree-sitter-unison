@@ -1,0 +1,33 @@
+========!!!
+only_comment
+========!!!
+
+-- this comment is ignored
+
+---!!!
+(source_file
+  (line_comment))
+
+============!!!
+comments_in_block
+============!!!
+
+four =
+  -- yields 4 :)
+  FOUR = 4  -- good
+  FOUR
+
+---!!!
+
+(source_file
+  (term_declaration
+    (term_definition
+      (identifier)
+      (line_comment)
+      (block_expression
+        (statement
+          (identifier)
+          (literal_number))
+        (line_comment)
+        (identifier)))))
+
