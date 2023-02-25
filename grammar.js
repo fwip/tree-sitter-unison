@@ -2,18 +2,21 @@ module.exports = grammar({
   name: 'unison',
 
   extras: $ => [/\\?\s/,
+    $._newline,
     $.line_comment,
-    // $.end_comment, // TODO: Doesn't work!
+    $.eof_comment,
   ],
 
   word: $ => $.identifier,
   //keywords: ['=', ':', '->', "'", 'do', '|', '!', '`', 'if', 'then', 'else', 'forall', 'handle', 'unique', 'structural', 'where', 'use', '&&', '||', 'true', 'false', 'type', 'ability', 'alias', 'let', 'namespace', 'cases', 'match', 'with', 'termLink', 'typeLink'],
 
-  // externals: $ => [
-  //   $.indent,
-  //   $.dedent,
-  //   $.newline
-  // ],
+  externals: $ => [
+    $._indent,
+    $._dedent,
+    $._newline,
+    $.line_comment,
+    $.eof_comment,
+  ],
 
   rules: {
     source_file: $ => repeat($._declaration),
@@ -42,7 +45,7 @@ module.exports = grammar({
       field("items", repeat(choice(
         $.identifier,
         $.operator))),
-      "\n",
+      $._newline,
 
       // repeat0(term)
     )),
@@ -82,12 +85,21 @@ module.exports = grammar({
 
 
     _expression: $ => choice(
+      $._indented_expression,
+      $._paren_expression,
       $._literal,
       //$.match,
       $.operator_expression,
-      seq('let', $.block_expression),
+      //seq('let', $.block_expression),
       prec(-1, $.identifier),
-      seq('(', $._expression, ')')
+
+    ),
+
+    _indented_expression: $ => seq(
+      $._indent, $._expression, $._dedent
+    ),
+    _paren_expression: $ => seq(
+      "(", $._expression, ")"
     ),
 
     _literal: $ => choice(
@@ -115,17 +127,22 @@ module.exports = grammar({
       $._expression,
     ),
 
-    operator_expression: $ => prec.left(1,
+    operator_expression: $ => prec.left(-5,
       seq(
         $._expression,
         $.operator,
         $._expression,
       )),
 
-    statement: $ => seq(
-      repeat1($.identifier),
-      '=',
+    _statement: $ => choice(
+      $.term_declaration,
       $._expression,
+    ),
+
+    statement: $ => seq(
+      field("lhs", repeat1($.identifier)),
+      '=',
+      field("rhs", $._expression),
     ),
 
     // TODO: Allow other numeric characters, double-check emoji and letter support
@@ -135,14 +152,19 @@ module.exports = grammar({
 
     // TODO: Support non-latin alphabets and emoji
     identifier: _$ => /(\p{Letter}|_)(\p{Letter}|\d|[-_!])*/,
-    operator: _$ => /[/!$%^&\*-=+<>.~\\/|:]+/,
+    operator: _$ => /[-/!$%^&\*=+<>\.~\/|:]+/,
 
+    comment: $ => choice(
+      $.line_comment,
+      $.eof_comment,
+    ),
 
-    end_comment: _$ => prec(20, token(seq(
-      "---",
-      repeat1(prec(200, /.*/))))),
-    line_comment: _$ => prec(10, token(seq(
-      "--", // begin comment
-      optional(/[^-].*/)))), // don't match "---"
+    // end_comment: _$ => prec(20, token(seq(
+    //   "---",
+    //   repeat1(prec(200, /.*/))))),
+    // line_comment: $ => prec(10, token(seq(
+    //   "--", // begin comment
+    //   optional(/[^-].*/),
+    // ))), // don't match "---"
   },
 })

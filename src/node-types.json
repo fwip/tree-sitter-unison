@@ -8,10 +8,6 @@
       "required": true,
       "types": [
         {
-          "type": "block_expression",
-          "named": true
-        },
-        {
           "type": "identifier",
           "named": true
         },
@@ -39,11 +35,6 @@
     }
   },
   {
-    "type": "line_comment",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "literal_list",
     "named": true,
     "fields": {},
@@ -51,10 +42,6 @@
       "multiple": true,
       "required": false,
       "types": [
-        {
-          "type": "block_expression",
-          "named": true
-        },
         {
           "type": "identifier",
           "named": true
@@ -86,10 +73,6 @@
       "multiple": true,
       "required": true,
       "types": [
-        {
-          "type": "block_expression",
-          "named": true
-        },
         {
           "type": "identifier",
           "named": true
@@ -143,36 +126,51 @@
   {
     "type": "statement",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "block_expression",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "literal_list",
-          "named": true
-        },
-        {
-          "type": "literal_number",
-          "named": true
-        },
-        {
-          "type": "literal_string",
-          "named": true
-        },
-        {
-          "type": "operator_expression",
-          "named": true
-        }
-      ]
+    "fields": {
+      "lhs": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "rhs": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "literal_list",
+            "named": true
+          },
+          {
+            "type": "literal_number",
+            "named": true
+          },
+          {
+            "type": "literal_string",
+            "named": true
+          },
+          {
+            "type": "operator_expression",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -319,10 +317,6 @@
     }
   },
   {
-    "type": "\n",
-    "named": false
-  },
-  {
     "type": "(",
     "named": false
   },
@@ -355,12 +349,16 @@
     "named": false
   },
   {
+    "type": "eof_comment",
+    "named": true
+  },
+  {
     "type": "identifier",
     "named": true
   },
   {
-    "type": "let",
-    "named": false
+    "type": "line_comment",
+    "named": true
   },
   {
     "type": "literal_number",
